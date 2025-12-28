@@ -1,5 +1,6 @@
 {
-    "name": "Boilerplate Card",
-    "render_readme": true,
-    "filename": "boilerplate-card.js"
+  "name": "Nexus Weather Card",
+  "content_type": "plugin",
+  "filename": "nexus-weather-card.js",
+  "render_readme": true
 }
