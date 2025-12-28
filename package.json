@@ -58,6 +58,6 @@
     "@lit/reactive-element": "1.2.1"
   },
 "scripts": {
-  "build": "esbuild src/nexus-weather-card.ts --bundle --outfile=dist/nexus-weather-card.js --minify --external:lit --external:custom-card-helpers"
-}
+ "build": "esbuild src/nexus-weather-card.ts --bundle --outfile=dist/nexus-weather-card.js --minify --platform=browser"}
+ 
 }
