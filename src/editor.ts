@@ -21,12 +21,13 @@ export class NexusWeatherCardEditor extends LitElement implements LovelaceCardEd
           .label="${this.hass.localize('ui.panel.lovelace.editor.card.generic.entity')} (Required)"
           .hass=${this.hass}
           .value=${this._config.entity}
+          .includeDomains=${['weather', 'sensor']}
           .configValue=${'entity'}
           @value-changed=${this._valueChanged}
           allow-custom-entity
         ></ha-entity-picker>
-        
-        <div class="side-by-side">
+
+        <div class="toggles">
           <ha-formfield .label=${"Show Wind Speed"}>
             <ha-switch
               .checked=${this._config.show_wind !== false}
@@ -42,6 +43,14 @@ export class NexusWeatherCardEditor extends LitElement implements LovelaceCardEd
               @change=${this._valueChanged}
             ></ha-switch>
           </ha-formfield>
+
+          <ha-formfield .label=${"Show Rain Amount"}>
+            <ha-switch
+              .checked=${this._config.show_rain_amt !== false}
+              .configValue=${'show_rain_amt'}
+              @change=${this._valueChanged}
+            ></ha-switch>
+          </ha-formfield>
         </div>
       </div>
     `;
@@ -50,6 +59,7 @@ export class NexusWeatherCardEditor extends LitElement implements LovelaceCardEd
   private _valueChanged(ev): void {
     if (!this._config || !this.hass) return;
     const target = ev.target;
+    if (!target?.configValue) return;
     const value = target.checked !== undefined ? target.checked : ev.detail.value;
 
     this._config = { ...this._config, [target.configValue]: value };
@@ -63,7 +73,12 @@ export class NexusWeatherCardEditor extends LitElement implements LovelaceCardEd
 
   static get styles(): CSSResultGroup {
     return css`
-      .side-by-side { display: flex; gap: 20px; margin-top: 15px; }
+      .toggles {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 16px;
+        margin-top: 15px;
+      }
     `;
   }
 }
