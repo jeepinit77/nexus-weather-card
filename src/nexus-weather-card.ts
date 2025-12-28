@@ -85,6 +85,20 @@ export class NexusWeatherCard extends LitElement implements LovelaceCard {
       </ha-card>
     `;
   }
+  // This tells Home Assistant which editor to open when you click 'Edit'
+// The return type must be HTMLElement or a specific custom element
+  public static getConfigElement(): HTMLElement {
+    return document.createElement("nexus-weather-card-editor");
+  }
+
+  // The return type should match your Config interface
+  public static getStubConfig(): LovelaceCardConfig {
+    return {
+      type: "custom:nexus-weather-card",
+      entity: "sensor.nexus_7_day_forecast",
+      show_rain_prob: true
+    };
+  }
 
   static get styles(): CSSResultGroup {
     return css`
