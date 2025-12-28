@@ -100,32 +100,27 @@ export class NexusWeatherCard extends LitElement implements LovelaceCard {
     };
   }
 
-  static get styles(): CSSResultGroup {
+static get styles(): CSSResultGroup {
     return css`
-      ha-card {
-        border-radius: 22px;
-        overflow: hidden;
-        background: var(--ha-card-background, rgba(255,255,255,0.05));
+      .temp-high { 
+        font-size: clamp(34px, 6.6cqw, 72px); 
+        font-weight: 650; 
+        color: rgba(232, 236, 240, 0.92); 
+        letter-spacing: -0.15cqw;
+        line-height: 0.98;
       }
-      .grid-container {
-        display: grid;
-        grid-template-columns: repeat(7, minmax(0, 1fr));
-        width: 100%;
+      .temp-low { 
+        font-size: clamp(34px, 6.6cqw, 72px); 
+        font-weight: 650; 
+        color: rgba(232, 236, 240, 0.62); 
+        letter-spacing: -0.15cqw;
+        line-height: 0.98;
       }
-      .column {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding-bottom: 10px;
+      .rain {
+        font-size: clamp(16px, 3.0cqw, 34px);
+        font-weight: 750;
+        color: rgba(165, 195, 215, 0.82);
       }
-      .divider { border-right: 1px solid rgba(255,255,255,0.1); }
-      .day-label { padding: 10px 0; font-weight: 800; font-size: 0.9em; }
-      .icon-wrapper img { width: 40px; height: 40px; }
-      .temp-high { font-size: 1.5em; font-weight: 600; color: #fff; }
-      .temp-low { font-size: 1.5em; font-weight: 600; color: rgba(255,255,255,0.6); }
-      .detail { font-size: 0.8em; font-weight: 700; margin-top: 4px; }
-      .rain { color: #a5c3d7; }
-      .wind { color: #e8ecf0; opacity: 0.8; }
     `;
   }
 }
