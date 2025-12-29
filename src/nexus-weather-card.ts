@@ -44,7 +44,18 @@ export class NexusWeatherCard extends LitElement implements LovelaceCard {
 
   public setConfig(config: Config): void {
     if (!config.entity) throw new Error("Please define a weather sensor entity");
-    this.config = config;
+    this.config = {
+      show_wind: true,
+      show_rain_prob: true,
+      show_rain_amt: false,
+      show_wind_gust: false,
+      show_wind_bearing: false,
+      show_uv_index: false,
+      show_humidity: false,
+      show_cloud_cover: false,
+      show_feels_like: false,
+      ...config,
+    };
   }
 
   private getDayName(dateStr: string, index: number): string {

@@ -9,7 +9,20 @@ export class NexusWeatherCardEditor extends LitElement implements LovelaceCardEd
   @state() private _config?: WeatherCardConfig;
 
   public setConfig(config: WeatherCardConfig): void {
-    this._config = config;
+    const defaults: WeatherCardConfig = {
+      entity: '',
+      show_wind: true,
+      show_rain_prob: true,
+      show_rain_amt: false,
+      show_wind_gust: false,
+      show_wind_bearing: false,
+      show_feels_like: false,
+      show_humidity: false,
+      show_cloud_cover: false,
+      show_uv_index: false,
+      ...config,
+    };
+    this._config = defaults;
   }
 
   protected render(): TemplateResult {
@@ -27,6 +40,11 @@ export class NexusWeatherCardEditor extends LitElement implements LovelaceCardEd
           allow-custom-entity
         ></ha-entity-picker>
 
+        <div class="actions">
+          <mwc-button dense @click=${() => this._setAll(true)}>Select all</mwc-button>
+          <mwc-button dense @click=${() => this._setAll(false)}>Deselect all</mwc-button>
+        </div>
+
         <div class="toggles">
           <ha-formfield .label=${"Show Wind Speed"}>
             <ha-switch
@@ -38,7 +56,7 @@ export class NexusWeatherCardEditor extends LitElement implements LovelaceCardEd
 
           <ha-formfield .label=${"Show Wind Gust"}>
             <ha-switch
-              .checked=${this._config.show_wind_gust !== false}
+              .checked=${this._config.show_wind_gust === true}
               .configValue=${'show_wind_gust'}
               @change=${this._valueChanged}
             ></ha-switch>
@@ -46,7 +64,7 @@ export class NexusWeatherCardEditor extends LitElement implements LovelaceCardEd
 
           <ha-formfield .label=${"Show Wind Direction"}>
             <ha-switch
-              .checked=${this._config.show_wind_bearing !== false}
+              .checked=${this._config.show_wind_bearing === true}
               .configValue=${'show_wind_bearing'}
               @change=${this._valueChanged}
             ></ha-switch>
@@ -62,7 +80,7 @@ export class NexusWeatherCardEditor extends LitElement implements LovelaceCardEd
 
           <ha-formfield .label=${"Show Rain Amount"}>
             <ha-switch
-              .checked=${this._config.show_rain_amt !== false}
+              .checked=${this._config.show_rain_amt === true}
               .configValue=${'show_rain_amt'}
               @change=${this._valueChanged}
             ></ha-switch>
@@ -70,7 +88,7 @@ export class NexusWeatherCardEditor extends LitElement implements LovelaceCardEd
 
           <ha-formfield .label=${"Show Feels Like"}>
             <ha-switch
-              .checked=${this._config.show_feels_like !== false}
+              .checked=${this._config.show_feels_like === true}
               .configValue=${'show_feels_like'}
               @change=${this._valueChanged}
             ></ha-switch>
@@ -78,7 +96,7 @@ export class NexusWeatherCardEditor extends LitElement implements LovelaceCardEd
 
           <ha-formfield .label=${"Show Humidity"}>
             <ha-switch
-              .checked=${this._config.show_humidity !== false}
+              .checked=${this._config.show_humidity === true}
               .configValue=${'show_humidity'}
               @change=${this._valueChanged}
             ></ha-switch>
@@ -86,7 +104,7 @@ export class NexusWeatherCardEditor extends LitElement implements LovelaceCardEd
 
           <ha-formfield .label=${"Show Cloud Cover"}>
             <ha-switch
-              .checked=${this._config.show_cloud_cover !== false}
+              .checked=${this._config.show_cloud_cover === true}
               .configValue=${'show_cloud_cover'}
               @change=${this._valueChanged}
             ></ha-switch>
@@ -94,7 +112,7 @@ export class NexusWeatherCardEditor extends LitElement implements LovelaceCardEd
 
           <ha-formfield .label=${"Show UV Index"}>
             <ha-switch
-              .checked=${this._config.show_uv_index !== false}
+              .checked=${this._config.show_uv_index === true}
               .configValue=${'show_uv_index'}
               @change=${this._valueChanged}
             ></ha-switch>
@@ -119,8 +137,35 @@ export class NexusWeatherCardEditor extends LitElement implements LovelaceCardEd
     this.dispatchEvent(event);
   }
 
+  private _setAll(value: boolean): void {
+    if (!this._config) return;
+    const updated = {
+      ...this._config,
+      show_wind: value,
+      show_wind_gust: value,
+      show_wind_bearing: value,
+      show_rain_prob: value,
+      show_rain_amt: value,
+      show_feels_like: value,
+      show_humidity: value,
+      show_cloud_cover: value,
+      show_uv_index: value,
+    };
+    this._config = updated;
+    this.dispatchEvent(new CustomEvent('config-changed', {
+      detail: { config: updated },
+      bubbles: true,
+      composed: true,
+    }));
+  }
+
   static get styles(): CSSResultGroup {
     return css`
+      .actions {
+        display: flex;
+        gap: 8px;
+        margin: 12px 0 4px;
+      }
       .toggles {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
