@@ -36,6 +36,22 @@ export class NexusWeatherCardEditor extends LitElement implements LovelaceCardEd
             ></ha-switch>
           </ha-formfield>
 
+          <ha-formfield .label=${"Show Wind Gust"}>
+            <ha-switch
+              .checked=${this._config.show_wind_gust !== false}
+              .configValue=${'show_wind_gust'}
+              @change=${this._valueChanged}
+            ></ha-switch>
+          </ha-formfield>
+
+          <ha-formfield .label=${"Show Wind Direction"}>
+            <ha-switch
+              .checked=${this._config.show_wind_bearing !== false}
+              .configValue=${'show_wind_bearing'}
+              @change=${this._valueChanged}
+            ></ha-switch>
+          </ha-formfield>
+
           <ha-formfield .label=${"Show Rain Probability"}>
             <ha-switch
               .checked=${this._config.show_rain_prob !== false}
@@ -48,6 +64,38 @@ export class NexusWeatherCardEditor extends LitElement implements LovelaceCardEd
             <ha-switch
               .checked=${this._config.show_rain_amt !== false}
               .configValue=${'show_rain_amt'}
+              @change=${this._valueChanged}
+            ></ha-switch>
+          </ha-formfield>
+
+          <ha-formfield .label=${"Show Feels Like"}>
+            <ha-switch
+              .checked=${this._config.show_feels_like !== false}
+              .configValue=${'show_feels_like'}
+              @change=${this._valueChanged}
+            ></ha-switch>
+          </ha-formfield>
+
+          <ha-formfield .label=${"Show Humidity"}>
+            <ha-switch
+              .checked=${this._config.show_humidity !== false}
+              .configValue=${'show_humidity'}
+              @change=${this._valueChanged}
+            ></ha-switch>
+          </ha-formfield>
+
+          <ha-formfield .label=${"Show Cloud Cover"}>
+            <ha-switch
+              .checked=${this._config.show_cloud_cover !== false}
+              .configValue=${'show_cloud_cover'}
+              @change=${this._valueChanged}
+            ></ha-switch>
+          </ha-formfield>
+
+          <ha-formfield .label=${"Show UV Index"}>
+            <ha-switch
+              .checked=${this._config.show_uv_index !== false}
+              .configValue=${'show_uv_index'}
               @change=${this._valueChanged}
             ></ha-switch>
           </ha-formfield>

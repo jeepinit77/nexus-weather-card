@@ -8,6 +8,12 @@ interface Config extends LovelaceCardConfig {
   show_rain_prob?: boolean;
   show_rain_amt?: boolean;
   show_wind?: boolean;
+  show_wind_gust?: boolean;
+  show_wind_bearing?: boolean;
+  show_uv_index?: boolean;
+  show_humidity?: boolean;
+  show_cloud_cover?: boolean;
+  show_feels_like?: boolean;
 }
 
 interface ForecastDay {
@@ -18,6 +24,12 @@ interface ForecastDay {
   precipitation_probability?: number;
   precipitation?: number;
   wind_speed?: number;
+  wind_gust_speed?: number;
+  wind_bearing?: number;
+  uv_index?: number;
+  humidity?: number;
+  cloud_coverage?: number;
+  apparent_temperature?: number;
   daytime?: boolean;
 }
 
@@ -56,6 +68,13 @@ export class NexusWeatherCard extends LitElement implements LovelaceCard {
     return "cloudy.svg";
   }
 
+  private bearingToCardinal(bearing?: number): string {
+    if (bearing === undefined || isNaN(bearing)) return "";
+    const dirs = ["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"];
+    const idx = Math.floor(((bearing % 360) / 22.5) + 0.5) % 16;
+    return `${dirs[idx]} ${Math.round(bearing)}°`;
+  }
+
   protected render(): TemplateResult {
     const sensor = this.hass.states[this.config.entity];
     if (!sensor || !sensor.attributes.forecast) return html`<ha-card>Sensor not found...</ha-card>`;
@@ -87,6 +106,24 @@ export class NexusWeatherCard extends LitElement implements LovelaceCard {
                 : ''}
               ${this.config.show_wind
                 ? html`<div class="detail wind">${Math.round(day.wind_speed ?? 0)} mph</div>`
+                : ''}
+              ${this.config.show_wind_gust
+                ? html`<div class="detail wind">${Math.round(day.wind_gust_speed ?? 0)} mph gusts</div>`
+                : ''}
+              ${this.config.show_wind_bearing
+                ? html`<div class="detail wind-dir">${this.bearingToCardinal(day.wind_bearing)}</div>`
+                : ''}
+              ${this.config.show_feels_like && day.apparent_temperature !== undefined
+                ? html`<div class="detail feels">Feels ${Math.round(day.apparent_temperature)}${tempUnit}</div>`
+                : ''}
+              ${this.config.show_humidity && day.humidity !== undefined
+                ? html`<div class="detail humidity">${day.humidity}% humidity</div>`
+                : ''}
+              ${this.config.show_cloud_cover && day.cloud_coverage !== undefined
+                ? html`<div class="detail clouds">${day.cloud_coverage}% clouds</div>`
+                : ''}
+              ${this.config.show_uv_index && day.uv_index !== undefined
+                ? html`<div class="detail uv">UV ${day.uv_index}</div>`
                 : ''}
             </div>
           `)}
@@ -174,6 +211,17 @@ export class NexusWeatherCard extends LitElement implements LovelaceCard {
         color: var(--secondary-text-color);
       }
       .wind {
+        font-size: 12px;
+        color: var(--secondary-text-color);
+      }
+      .wind-dir {
+        font-size: 12px;
+        color: var(--secondary-text-color);
+      }
+      .feels,
+      .humidity,
+      .clouds,
+      .uv {
         font-size: 12px;
         color: var(--secondary-text-color);
       }
