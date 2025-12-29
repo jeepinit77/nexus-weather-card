@@ -26,19 +26,32 @@ export class NexusWeatherCardEditor extends LitElement implements LovelaceCardEd
   }
 
   protected render(): TemplateResult {
-    if (!this.hass || !this._config) return html``;
+    if (!this._config) return html``;
+
+    const entityPicker = this.hass
+      ? html`
+          <ha-entity-picker
+            .label="${this.hass.localize('ui.panel.lovelace.editor.card.generic.entity')} (Required)"
+            .hass=${this.hass}
+            .value=${this._config.entity}
+            .includeDomains=${['weather', 'sensor']}
+            .configValue=${'entity'}
+            @value-changed=${this._valueChanged}
+            allow-custom-entity
+          ></ha-entity-picker>
+        `
+      : html`
+          <paper-input
+            label="Entity (Required)"
+            .value=${this._config.entity}
+            .configValue=${'entity'}
+            @value-changed=${this._valueChanged}
+          ></paper-input>
+        `;
 
     return html`
       <div class="card-config">
-        <ha-entity-picker
-          .label="${this.hass.localize('ui.panel.lovelace.editor.card.generic.entity')} (Required)"
-          .hass=${this.hass}
-          .value=${this._config.entity}
-          .includeDomains=${['weather', 'sensor']}
-          .configValue=${'entity'}
-          @value-changed=${this._valueChanged}
-          allow-custom-entity
-        ></ha-entity-picker>
+        ${entityPicker}
 
         <div class="actions">
           <mwc-button dense @click=${() => this._setAll(true)}>Select all</mwc-button>
@@ -123,7 +136,7 @@ export class NexusWeatherCardEditor extends LitElement implements LovelaceCardEd
   }
 
   private _valueChanged(ev): void {
-    if (!this._config || !this.hass) return;
+    if (!this._config) return;
     const target = ev.target;
     if (!target?.configValue) return;
     const value = target.checked !== undefined ? target.checked : ev.detail.value;
